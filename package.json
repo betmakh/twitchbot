@@ -1,0 +1,17 @@
+{
+  "name": "twibot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^1.6.3",
+    "socket.io": "^1.5.1",
+    "tmi.js": "^1.1.2",
+    "twitch-irc": "^1.2.7"
+  }
+}
