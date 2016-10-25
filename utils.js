@@ -17,6 +17,16 @@ module.exports = {
                 }
             })
     },
+    getJokes: function() {
+    	return fetch('http://www.umori.li/api/get?site=bash.im&name=bash&num=100')
+    		.then(function(resp){
+    			if (resp.status === 200) {
+    				return resp.json();
+    			} else {
+    				return null;
+    			}
+    		})
+    },
     updateModerators: function() {
         return new Promise(function(resolve, reject) {
             fetch('http://tmi.twitch.tv/group/user/betmanenko/chatters')
