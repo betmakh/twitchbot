@@ -18,7 +18,7 @@ var opts = {
         username: config.USER,
         password: config.PASS
     },
-    channels: [config.CHANNEL]
+    channels: config.CHANNELS
 };
 
 
@@ -42,7 +42,7 @@ client.connect();
 
 client.on('connected', function(address, port) {
     utils.sendMsg(client, "Hey bitches, Im here to make some shkol'niki calm down! Prepare your anus!")
-})
+});
 
 client.on('chat', function(channel, userstate, message, self) {
     if (self) return;
@@ -61,7 +61,7 @@ client.on('chat', function(channel, userstate, message, self) {
     });
 
     if (message.indexOf('!uptime') === 0 ) {
-        utils.getChannelInfo().then(function(resp){
+        utils.getChannelInfo(channel).then(function(resp){
             if (resp.stream) {
                 msg = "Стрим стартанул в " + resp.stream.created_at;
             } else {
@@ -71,15 +71,16 @@ client.on('chat', function(channel, userstate, message, self) {
     } else if (message.indexOf('!pidor') === 0) {
         msg = '@' + userstate.username + ' - пидор.';
     } else if (isAhuel) {
-        if (ahuevshie[userstate.username] == 1) {
+        if (ahuevshie[userstate.username] == 2) {
             msg = '@' + userstate.username + ', еще раз такое напишешь - я тебе круглой скобочкой по еблищу дам!';
-        } else if (ahuevshie[userstate.username] > 1) {
+        } else if (ahuevshie[userstate.username] > 2) {
             msg = '@' + userstate.username + ', ну все сука, ты отгребаешь!';
-            utils.timeoutUser(client, userstate.username, ahuevshie[userstate.username] * 100);
+            utils.timeoutUser(client, userstate.username, ahuevshie[userstate.username] * 100, channel);
             ahuevshie[userstate.username] = null;
         } else {
             msg = '@' + userstate.username + ', не делай так.';
         }
+        
     } else if (message.indexOf('!roulette') === 0) {
         var rand = Math.random()*10;
         if (rand < 5) {
@@ -101,7 +102,7 @@ client.on('chat', function(channel, userstate, message, self) {
         utils.getJokes().then(function(data) {
             var joke = data[Math.floor(Math.random() * data.length)];
             console.log('joke', joke);
-            utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""));
+            utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""), channel);
         }, function(err) {
             console.log('err', err);
         })
@@ -109,10 +110,13 @@ client.on('chat', function(channel, userstate, message, self) {
         if (args[1]) {
             msg = (args[1].indexOf(config.god) == -1 ? args[1] : userstate.username) + ", ты пидор!";
         }
+    } else if (message.indexOf(config.USER) != -1) {
+        let ascorbinka = ["Отъебись", "Иди нахуй", "Комманды для кого под каналом написаны?"]
+        msg = ascorbinka[Math.floor(Math.random() * ascorbinka.length)];
     }
 
     if (msg && msg.length) {
-        utils.sendMsg(client, msg);
+        utils.sendMsg(client, msg, channel);
     }
 
 })

@@ -3,7 +3,7 @@ var config = require('./config');
 
 module.exports = {
     getChannelInfo: function(channel) {
-    	channel = channel || config.CHANNEL;
+    	channel = channel || config.CHANNELS[0];
         return fetch('https://api.twitch.tv/kraken/streams/' + channel, {
                 headers: {
                     'Client-ID': config.TOKEN
@@ -51,11 +51,23 @@ module.exports = {
                 });
         })
     },
-    sendMsg: function(client, msg) {
-    	client.action(config.CHANNEL," : " +  msg);
+    sendMsg: function(client, msg, channel) {
+    	 if (channel) {
+	    		client.action(channel ," : " +  msg);
+    	} else {
+	    	config.CHANNELS.forEach(function (ch){
+	    		client.action(ch ," : " +  msg);
+	    	})
+    	}
     },
-    timeoutUser: function(client, user, time) {
-    	client.timeout(config.CHANNEL, user, time);
+    timeoutUser: function(client, user, time, channel) {
+    	if (channel) {
+	    		client.timeout(channel, user, time);
+    	} else {
+	    	config.CHANNELS.forEach(function(ch){
+	    		client.timeout(ch, user, time);
+	    	})
+    	}
     }
 
 }
