@@ -101,7 +101,7 @@ client.on('chat', function(channel, userstate, message, self) {
         utils.getJokes().then(function(data) {
             var joke = data[Math.floor(Math.random() * data.length)];
             console.log('joke', joke);
-            utils.sendMsg(client, joke.elementPureHtml);
+            utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""));
         }, function(err) {
             console.log('err', err);
         })
