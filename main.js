@@ -60,6 +60,7 @@ client.on('chat', function(channel, userstate, message, self) {
             return;
         } 
     });
+            console.log('ahuevshie', ahuevshie);
 
     if (message.indexOf('!uptime') === 0 ) {
         utils.getChannelInfo(channel).then(function(resp){
@@ -77,7 +78,6 @@ client.on('chat', function(channel, userstate, message, self) {
         } else if (ahuevshie[userstate.username] > 2) {
             msg = '@' + userstate.username + ', ну все сука, ты отгребаешь!';
             utils.timeoutUser(client, userstate.username, ahuevshie[userstate.username] * 100, channel);
-            ahuevshie[userstate.username] = null;
         } else {
             msg = '@' + userstate.username + ', не делай так.';
         }
@@ -89,13 +89,12 @@ client.on('chat', function(channel, userstate, message, self) {
         } else {
             let banTime = Math.random() * 1000;
             msg = '@' + userstate.username + ', поздравляю братан. Ты заработал бан(' + Math.round(banTime) + 's)';
-            utils.timeoutUser(client, userstate.username, banTime);
+            utils.timeoutUser(client, userstate.username, banTime, channel);
         }
     } else if (message.indexOf('!magicball') === 0) {
         if (message.indexOf('?') < 0) {
             msg = '@' + userstate.username + ', ' + "это не вопрос";
         } else {
-            let question = message.slice(message.indexOf(' '));
             let variants = ['Да', 'Нет', 'Ты ебанутый такие вопросы задавать?', 'Определенно нет', 'Базарю, инфа сотка'];
             msg = '@' + userstate.username + ', ' +  variants[Math.floor(Math.random() * variants.length)];
         }
