@@ -1,3 +1,4 @@
+'use strict';
 var config = require('./config');
 var utils = require('./utils');
 
@@ -101,7 +102,6 @@ client.on('chat', function(channel, userstate, message, self) {
     } else if (message.indexOf('!joke') === 0) {
         utils.getJokes().then(function(data) {
             var joke = data[Math.floor(Math.random() * data.length)];
-            console.log('joke', joke);
             utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""), channel);
         }, function(err) {
             console.log('err', err);
