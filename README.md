@@ -12,5 +12,9 @@ Configuration contains in [config.js](https://github.com/betmakh/twitchbot/blob/
 
 ### Enviroment setup
 Open Node.js command prompt and navigate to local folder with repository.
+
+
 `npm install` - install dependecies
+
+
 `node main.js` - start a bot 
