@@ -1,12 +1,15 @@
 'use strict';
 var config = require('./config');
 var utils = require('./utils');
+var moment = require('moment');
 
 // var ircClient = require('twitch-irc').client;
 // var io = require('socket.io-client');
 var tmi = require('tmi.js');
 var fetch = require('node-fetch');
-var ahuevshie = {};
+var ahuevshie = {},
+        jokeTime = 1000 * 60 * 5,
+        lastJoke = 0;
 
 var opts = {
     options: {
@@ -21,6 +24,9 @@ var opts = {
     },
     channels: config.CHANNELS
 };
+
+var time = moment('2016-10-28T17:52:17Z').fromNow();
+console.log('time', time);
 
 
 
@@ -50,8 +56,9 @@ client.on('chat', function(channel, userstate, message, self) {
 
     var msg,
         args = message.split(' '),
-        skob = [/\({2,}/, /\){2,}/],
+        skob = [/\({2,}/, /[\{\}\[\]\)]{2,}/],
         isAhuel = false;
+
 
     skob.forEach(function(el) {
         if (el.test(message)) {
@@ -60,15 +67,21 @@ client.on('chat', function(channel, userstate, message, self) {
             return;
         } 
     });
-            console.log('ahuevshie', ahuevshie);
 
     if (message.indexOf('!uptime') === 0 ) {
+
+        console.log('uptime');
         utils.getChannelInfo(channel).then(function(resp){
+            console.log('resp', resp.stream);
             if (resp.stream) {
-                msg = "Стрим стартанул в " + resp.stream.created_at;
+                msg = "Стрим стартанул " + moment(resp.stream.created_at).fromNow();
             } else {
                 msg = "Стрим оффлайн, братишки.";
             }
+            utils.sendMsg(client, msg, channel);
+            msg = null;
+        }, function(err) {
+            console.log('err', err);
         });
     } else if (message.indexOf('!pidor') === 0) {
         msg = '@' + userstate.username + ' - пидор.';
@@ -96,15 +109,24 @@ client.on('chat', function(channel, userstate, message, self) {
             msg = '@' + userstate.username + ', ' + "это не вопрос";
         } else {
             let variants = ['Да', 'Нет', 'Ты ебанутый такие вопросы задавать?', 'Определенно нет', 'Базарю, инфа сотка'];
+            
             msg = '@' + userstate.username + ', ' +  variants[Math.floor(Math.random() * variants.length)];
         }
     } else if (message.indexOf('!joke') === 0) {
-        utils.getJokes().then(function(data) {
-            var joke = data[Math.floor(Math.random() * data.length)];
-            utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""), channel);
-        }, function(err) {
-            console.log('err', err);
-        })
+        console.log('Date.now()', Date.now());
+            console.log('lastJoke', lastJoke);
+            console.log('jokeTime', jokeTime);
+        if ((Date.now() - lastJoke) > jokeTime) {
+            lastJoke = Date.now();
+            utils.getJokes().then(function(data) {
+                var joke = data[Math.floor(Math.random() * data.length)];
+                utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""), channel);
+            }, function(err) {
+                console.log('err', err);
+            })
+        } else {
+            msg = '@' + userstate.username + ', угомонись';
+        }
     } else if (message.indexOf('!typidor') === 0) {
         if (args[1]) {
             msg = (args[1].indexOf(config.god) == -1 ? args[1] : userstate.username) + ", ты пидор!";
@@ -114,7 +136,9 @@ client.on('chat', function(channel, userstate, message, self) {
         msg = ascorbinka[Math.floor(Math.random() * ascorbinka.length)];
     }
 
+        console.log('msg', msg);
     if (msg && msg.length) {
+        console.log('msg', msg);
         utils.sendMsg(client, msg, channel);
     }
 
