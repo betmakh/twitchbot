@@ -12,6 +12,7 @@
     "node-fetch": "^1.6.3",
     "socket.io": "^1.5.1",
     "tmi.js": "^1.1.2",
-    "twitch-irc": "^1.2.7"
+    "twitch-irc": "^1.2.7",
+    "underscore": "^1.8.3"
   }
 }
