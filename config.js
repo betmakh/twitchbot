@@ -5,5 +5,11 @@ module.exports = {
 	"TOKEN" : 'o9gnnqnx1sxt6twajj6h7u4w7ko6bhj', //your twitch api key individual for each user (some functions may not work without it)
 
 	moderatorGroups: ['moderators', 'staff', 'admins', 'global_mods'],
-	god: 'betmanenko'
+	god: 'betmanenko',
+
+	messages: {
+		greetings: ["здоров братишка", "чо каво, сучара", "хорошая погода сегодня, да" ],
+		ascorbinka: ["Отъебись", "Иди нахуй", "Комманды для кого под каналом написаны?"],
+		answers: ['Да', 'Нет', 'Ты ебанутый такие вопросы задавать?', 'Определенно нет', 'Базарю, инфа сотка']
+	}
 }
