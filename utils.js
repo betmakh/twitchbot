@@ -69,6 +69,7 @@ module.exports = {
     },
     getChannelInfo: function(channel) {
         channel = channel || config.CHANNELS[0];
+            console.log(krakenPrefix + 'streams/' + channel);
         return fetch(krakenPrefix + 'streams/' + channel, {
                 headers: {
                     'Client-ID': config.TOKEN

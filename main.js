@@ -1,6 +1,7 @@
 'use strict';
 var config = require('./config');
 var utils = require('./utils');
+var moment = require('moment');
 
 // var ircClient = require('twitch-irc').client;
 // var io = require('socket.io-client');
@@ -76,14 +77,17 @@ client.on('chat', function(channel, userstate, message, self) {
   console.log('ahuevshie', ahuevshie);
 
   if (message.indexOf('!uptime') === 0) {
-    utils.getChannelInfo(channel).then(function(resp) {
-      if (resp.stream) {
-        msg = "Стрим идет: " + moment.utc(moment().diff(moment(resp.stream.created_at))).format("HH:mm:ss");
+    utils.getChannelInfo(channel.slice('1')).then(function(resp) {
+        console.log('resp', resp);
+      if (resp) {
+        msg = "Стрим идет: " + moment.utc(moment()).format("HH:mm:ss");
       } else {
         msg = "Стрим оффлайн, братишки.";
       }
         utils.sendMsg(client, msg, channel);
     });
+  } else if (message.toLowerCase().indexOf('ахуеть') === 0) {
+    msg = config.messages['jockeAboutLysyi'][0];
   } else if (message.indexOf('!pidor') === 0) {
     msg = '@' + userstate.username + ' - пидор.';
   } else if (isAhuel) {
