@@ -128,6 +128,8 @@ client.on('chat', function(channel, userstate, message, self) {
     }
   } else if (message.indexOf(config.USER) != -1) {
     msg = _.sample(config.messages.ascorbinka);
+  } else {
+    utils.sayText(message);
   }
 
   if (msg && msg.length) {

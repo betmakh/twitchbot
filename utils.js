@@ -1,5 +1,6 @@
 var fetch = require('node-fetch');
 var config = require('./config');
+var say = require('./say');
 
 var krakenPrefix = 'https://api.twitch.tv/kraken/';
 module.exports = {
@@ -134,6 +135,19 @@ module.exports = {
                 client.timeout(ch, user, time);
             })
         }
+    },
+    sayText: function(txt) {
+            console.log("tryin to say");
+        return new Promise((resolve, reject) => {
+            say.speak(txt, null, null, function(err) {
+                console.log("err", err);
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(txt);
+                }
+            });
+        })
     }
 
 }
