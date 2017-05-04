@@ -61,7 +61,7 @@ say.speak = function(text, voice, speed, callback) {
     pipedData += '(SayText \"' + text + '\")';
   } else if (process.platform === 'win32') {
     pipedData = text;
-    commands = [ 'Add-Type -AssemblyName System.speech; $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer; $speak.Speak([Console]::In.ReadToEnd())' ];
+    commands = [ '\uFEFFAdd-Type -AssemblyName System.speech; $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer; $speak.Speak("'+text+'")' ];
   } else {
     // if we don't support the platform, callback with an error (next tick) - don't continue
     return process.nextTick(function() {
@@ -71,16 +71,28 @@ say.speak = function(text, voice, speed, callback) {
 
   var options = (process.platform === 'win32') ? { shell: true } : undefined;
   console.log("options", options);
-  childD = child_process.spawn(say.speaker, commands, options);
+  var Shell = require('node-powershell');
+  var shell = new Shell();
+  shell.addCommand('Add-Type -AssemblyName System.speech');
+  shell.addCommand('$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer');
+  shell.addCommand('$speak.Speak("'+text+'")');
+  shell.invoke();
+  shell.on('output', data => {
+      console.log("data", data);
+  });
+  // childD = child_process.spawn(say.speaker, commands, options);
 
-  childD.stdin.setEncoding('ascii');
-  childD.stderr.setEncoding('ascii');
+  childD.stdin.setEncoding('utf8');
+  childD.stderr.setEncoding('utf8');
 
+      console.log("pipedData", pipedData);
+    console.log("commands", commands);
   if (pipedData) {
-    childD.stdin.end(pipedData);
+    childD.stdin.end('\ufeff' + pipedData, 'utf8');
   }
 
   childD.stderr.once('data', function(data) {
+      console.log("error data", data);
     // we can't stop execution from this function
     callback(new Error(data));
   });
@@ -138,8 +150,8 @@ say.export = function(text, voice, speed, filename, callback) {
 
   childD = child_process.spawn(say.speaker, commands);
 
-  childD.stdin.setEncoding('ascii');
-  childD.stderr.setEncoding('ascii');
+  childD.stdin.setEncoding('utf8');
+  childD.stderr.setEncoding('utf8');
 
   if (pipedData) {
     childD.stdin.end(pipedData);

@@ -1,6 +1,7 @@
 'use strict';
 var config = require('./config');
 var utils = require('./utils');
+var sayWin = require('./sayWin');
 var moment = require('moment');
 
 // var ircClient = require('twitch-irc').client;
@@ -41,7 +42,15 @@ var opts = {
 // })
 
 var client = new tmi.client(opts);
-client.connect();
+// client.connect();
+
+sayWin('latin'); //talk
+
+sayWin('кирилица'); //silence
+
+sayWin('\ufeffкирилица'); //silence
+
+
 
 client.on('connected', function(address, port) {
   utils.sendMsg(client, "Hey bitches, Im here to make some shkol'niki calm down! Prepare your anus!")
