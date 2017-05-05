@@ -137,9 +137,7 @@ module.exports = {
         }
     },
     sayText: function(txt) {
-        return say(txt).then(res => {
-            console.log("res", res);
-        })
+        return say(txt);
     }
 
 }
