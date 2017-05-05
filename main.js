@@ -1,6 +1,7 @@
 'use strict';
 var config = require('./config');
 var utils = require('./utils');
+// var sayWin = require('./sayWin');
 var moment = require('moment');
 
 // var ircClient = require('twitch-irc').client;
@@ -43,6 +44,14 @@ var opts = {
 var client = new tmi.client(opts);
 client.connect();
 
+// sayWin('latin'); //talk
+
+// sayWin('кирилица'); //silence
+
+// sayWin('\ufeffкирилица'); //silence
+
+
+
 client.on('connected', function(address, port) {
   utils.sendMsg(client, "Hey bitches, Im here to make some shkol'niki calm down! Prepare your anus!")
 });
@@ -79,7 +88,7 @@ client.on('chat', function(channel, userstate, message, self) {
   if (message.indexOf('!uptime') === 0) {
     utils.getChannelInfo(channel.slice('1')).then(function(resp) {
         console.log('resp', resp);
-      if (resp) {
+      if (resp.stream) {
         msg = "Стрим идет: " + moment.utc(moment()).format("HH:mm:ss");
       } else {
         msg = "Стрим оффлайн, братишки.";
@@ -128,6 +137,8 @@ client.on('chat', function(channel, userstate, message, self) {
     }
   } else if (message.indexOf(config.USER) != -1) {
     msg = _.sample(config.messages.ascorbinka);
+  } else {
+    utils.sayText(message);
   }
 
   if (msg && msg.length) {
