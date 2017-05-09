@@ -50,7 +50,61 @@ client.connect();
 
 // sayWin('\ufeffкирилица'); //silence
 
+// var testResp = {
+//   stream: {
+//     _id: 25227057424,
+//     game: 'Battlefield 1',
+//     viewers: 2,
+//     video_height: 720,
+//     average_fps: 59.9700149925,
+//     delay: 0,
+//     created_at: '2017-05-09T13:02:48Z',
+//     is_playlist: false,
+//     stream_type: 'live',
+//     preview: {
+//       small: 'https://static-cdn.jtvnw.net/previews-ttv/live_user_betmanenko-80x45.jpg',
+//       medium: 'https://static-cdn.jtvnw.net/previews-ttv/live_user_betmanenko-320x180.jpg',
+//       large: 'https://static-cdn.jtvnw.net/previews-ttv/live_user_betmanenko-640x360.jpg',
+//       template: 'https://static-cdn.jtvnw.net/previews-ttv/live_user_betmanenko-{width}x{height}.jpg'
+//     },
+//     channel: {
+//       mature: true,
+//       partner: false,
+//       status: 'Аллах акбар [ps4]',
+//       broadcaster_language: 'ru',
+//       display_name: 'betmanenko',
+//       game: 'Battlefield 1',
+//       language: 'en',
+//       _id: 42210420,
+//       name: 'betmanenko',
+//       created_at: '2013-04-07T18:06:25Z',
+//       updated_at: '2017-05-07T18:02:45Z',
+//       delay: null,
+//       logo: 'https://static-cdn.jtvnw.net/jtv_user_pictures/betmanenko-profile_image-eac9054f05f8f6c3-300x300.png',
+//       banner: null,
+//       video_banner: 'https://static-cdn.jtvnw.net/jtv_user_pictures/betmanenko-channel_offline_image-c446c146104a1cb0-1920x1080.png',
+//       background: null,
+//       profile_banner: 'https://static-cdn.jtvnw.net/jtv_user_pictures/betmanenko-profile_banner-8680a6757ee41582-480.png',
+//       profile_banner_background_color: '',
+//       url: 'https://www.twitch.tv/betmanenko',
+//       views: 3907,
+//       followers: 91,
+//       _links: [Object]
+//     },
+//     _links: { self: 'https://api.twitch.tv/kraken/streams/betmanenko' }
+//   },
+//   _links: {
+//     self: 'https://api.twitch.tv/kraken/streams/betmanenko',
+//     channel: 'https://api.twitch.tv/kraken/channels/betmanenko'
+//   }
+// }
 
+// var date = moment.utc(testResp.stream.created_at);
+// var currDate = moment.utc();
+// var diff = moment.utc(moment.utc().diff(moment.utc(testResp.stream.created_at))).format("HH:mm:ss");
+// console.log("diff", diff.format("HH:mm:ss"));
+// console.log("currDate", currDate.format("HH:mm:ss"));
+// console.log("date", date.format("HH:mm:ss"));
 
 client.on('connected', function(address, port) {
   utils.sendMsg(client, "Hey bitches, Im here to make some shkol'niki calm down! Prepare your anus!")
@@ -89,7 +143,7 @@ client.on('chat', function(channel, userstate, message, self) {
     utils.getChannelInfo(channel.slice('1')).then(function(resp) {
         console.log('resp', resp);
       if (resp.stream) {
-        msg = "Стрим идет: " + moment.utc(moment()).format("HH:mm:ss");
+        msg = "Стрим идет: " + moment.utc(moment.utc().diff(moment.utc(resp.stream.created_at))).format("HH:mm:ss");
       } else {
         msg = "Стрим оффлайн, братишки.";
       }
