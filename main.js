@@ -46,7 +46,7 @@ client.connect();
 
 // sayWin('latin'); //talk
 
-// sayWin('кирилица'); //silence
+// sayWin('думаю, "йопта, не падай" не остановит от падения'); //silence
 
 // sayWin('\ufeffкирилица'); //silence
 
