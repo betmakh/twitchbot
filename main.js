@@ -1,9 +1,11 @@
 'use strict';
 var config = require('./config');
 var utils = require('./utils');
-// var sayWin = require('./sayWin');
+var sayWin = require('./sayWin');
 var moment = require('moment');
 
+// sayWin('zalupa');
+// sayWin('Я както раз нашел зайца на свалке. А он был пидором и пососал мне хуй');
 // var ircClient = require('twitch-irc').client;
 // var io = require('socket.io-client');
 var _ = require('underscore');
@@ -16,7 +18,7 @@ var opts = {
     debug: true
   },
   connection: {
-    reconnect: true,
+    reconnect: true
   },
   identity: {
     username: config.USER,
@@ -24,8 +26,6 @@ var opts = {
   },
   channels: config.CHANNELS
 };
-
-
 
 // utils.updateModerators().then(function(data) {
 //     console.log('data', data);
@@ -107,17 +107,19 @@ client.connect();
 // console.log("date", date.format("HH:mm:ss"));
 
 client.on('connected', function(address, port) {
-  utils.sendMsg(client, "Hey bitches, Im here to make some shkol'niki calm down! Prepare your anus!")
+  utils.sendMsg(client, "Hey bitches, Im here to make some shkol'niki calm down! Prepare your anus!");
 });
 
-client.on("join", function(channel, username, self) {
+client.on('join', function(channel, username, self) {
   if (self) return;
   if (username == config.god) {
-    utils.sendMsg(client, 'БАТЯ ИН ДА ХАУС СУКА. ЧИРС ФО ' + username + ', ОН НАГРАДИЛ ВАС СВОИМ ПРИСУТСТВИЕМ(и хуем))0)');
+    utils.sendMsg(
+      client,
+      'БАТЯ ИН ДА ХАУС СУКА. ЧИРС ФО ' + username + ', ОН НАГРАДИЛ ВАС СВОИМ ПРИСУТСТВИЕМ(и хуем))0)'
+    );
   } else {
-    utils.sendMsg(client, '@' + username + ", " + _.sample(config.messages.greetings));
+    utils.sendMsg(client, '@' + username + ', ' + _.sample(config.messages.greetings));
   }
-
 });
 
 // utils.getFollowersList();
@@ -133,21 +135,21 @@ client.on('chat', function(channel, userstate, message, self) {
   // skob.forEach(function(el) {
   //     if (el.test(message)) {
   //         isAhuel = true;
-  //         ahuevshie[userstate.username] = ahuevshie[userstate.username] ? ahuevshie[userstate.username] + 1 : 1; 
+  //         ahuevshie[userstate.username] = ahuevshie[userstate.username] ? ahuevshie[userstate.username] + 1 : 1;
   //         return;
-  //     } 
+  //     }
   // });
   console.log('ahuevshie', ahuevshie);
 
   if (message.indexOf('!uptime') === 0) {
     utils.getChannelInfo(channel.slice('1')).then(function(resp) {
-        console.log('resp', resp);
+      console.log('resp', resp);
       if (resp.stream) {
-        msg = "Стрим идет: " + moment.utc(moment.utc().diff(moment.utc(resp.stream.created_at))).format("HH:mm:ss");
+        msg = 'Стрим идет: ' + moment.utc(moment.utc().diff(moment.utc(resp.stream.created_at))).format('HH:mm:ss');
       } else {
-        msg = "Стрим оффлайн, братишки.";
+        msg = 'Стрим оффлайн, братишки.';
       }
-        utils.sendMsg(client, msg, channel);
+      utils.sendMsg(client, msg, channel);
     });
   } else if (message.toLowerCase().indexOf('ахуеть') === 0) {
     msg = config.messages['jockeAboutLysyi'][0];
@@ -162,11 +164,10 @@ client.on('chat', function(channel, userstate, message, self) {
     } else {
       msg = '@' + userstate.username + ', не делай так.';
     }
-
   } else if (message.indexOf('!roulette') === 0) {
     var rand = Math.random() * 10;
     if (rand < 5) {
-      msg = '@' + userstate.username + ', повезло тебе, сучка!'
+      msg = '@' + userstate.username + ', повезло тебе, сучка!';
     } else {
       let banTime = Math.random() * 1000;
       msg = '@' + userstate.username + ', поздравляю братан. Ты заработал бан(' + Math.round(banTime) + 's)';
@@ -174,20 +175,27 @@ client.on('chat', function(channel, userstate, message, self) {
     }
   } else if (message.indexOf('!magicball') === 0) {
     if (message.indexOf('?') < 0) {
-      msg = '@' + userstate.username + ", это не вопрос";
+      msg = '@' + userstate.username + ', это не вопрос';
     } else {
       msg = '@' + userstate.username + ', ' + _.sample(config.messages.answers);
     }
   } else if (message.indexOf('!joke') === 0) {
-    utils.getJokes().then(function(data) {
-      var joke = _.sample(data);
-      utils.sendMsg(client, joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, "").replace(/&[A-Za-z]+;/g, ""), channel);
-    }, function(err) {
-      console.log('err', err);
-    })
+    utils.getJokes().then(
+      function(data) {
+        var joke = _.sample(data);
+        utils.sendMsg(
+          client,
+          joke.elementPureHtml.replace(/<[A-Za-z ='"#0-9]+\/?>/g, '').replace(/&[A-Za-z]+;/g, ''),
+          channel
+        );
+      },
+      function(err) {
+        console.log('err', err);
+      }
+    );
   } else if (message.indexOf('!typidor') === 0) {
     if (args[1]) {
-      msg = (args[1].indexOf(config.god) == -1 ? args[1] : userstate.username) + ", ты пидор!";
+      msg = (args[1].indexOf(config.god) == -1 ? args[1] : userstate.username) + ', ты пидор!';
     }
   } else if (message.indexOf(config.USER) != -1) {
     msg = _.sample(config.messages.ascorbinka);
@@ -198,5 +206,4 @@ client.on('chat', function(channel, userstate, message, self) {
   if (msg && msg.length) {
     utils.sendMsg(client, msg, channel);
   }
-
-})
+});

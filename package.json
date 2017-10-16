@@ -9,12 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "google-tts-api": "^0.0.2",
     "moment": "^2.15.2",
     "node-fetch": "^1.6.3",
     "node-powershell": "^3.1.1",
+    "player": "^0.6.1",
     "socket.io": "^1.5.1",
     "tmi.js": "^1.1.2",
     "twitch-irc": "^1.2.7",
+    "underscore": "^1.8.3",
     "utf8": "^2.1.2"
   }
 }
